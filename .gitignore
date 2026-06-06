@@ -1,0 +1,8 @@
+.gradle/
+**/build/
+*.apk
+*.log
+test_output.log
+apk_check.txt
+build_status.txt
+build_output.log
