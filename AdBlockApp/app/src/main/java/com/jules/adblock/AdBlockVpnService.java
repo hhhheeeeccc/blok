@@ -54,8 +54,12 @@ public class AdBlockVpnService extends VpnService {
         Builder builder = new Builder();
         builder.setSession("AdBlocker")
                .addAddress("10.0.0.2", 32)
+               // AdGuard DNS for AdBlocking
                .addDnsServer("94.140.14.14")
-               .addDnsServer("94.140.15.15");
+               .addDnsServer("94.140.15.15")
+               // Cloudflare and Google DNS for Unblocking (Lightweight VPN)
+               .addDnsServer("1.1.1.1")
+               .addDnsServer("8.8.8.8");
 
         SharedPreferences prefs = getSharedPreferences("adblock_prefs", MODE_PRIVATE);
         Set<String> isolatedApps = prefs.getStringSet("isolated_apps", new HashSet<>());
