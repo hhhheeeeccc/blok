@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">AdBlocker</string>
+    <string name="app_name">مانع الإعلانات</string>
+    <string name="app_title">مانع الإعلانات الذكي</string>
+    <string name="app_subtitle">حماية كاملة وخصوصية قصوى</string>
+    <string name="status_active">الحماية نشطة</string>
+    <string name="status_inactive">الحماية غير نشطة</string>
+    <string name="btn_isolation">إدارة عزل التطبيقات</string>
+    <string name="isolation_title">عزل التطبيقات</string>
+    <string name="isolation_subtitle">اختر التطبيقات التي تريد قطع الإنترنت عنها بالكامل</string>
+    <string name="search_hint">بحث عن تطبيق...</string>
+    <string name="vpn_notif_title">مانع الإعلانات يعمل</string>
+    <string name="vpn_notif_text">الخصوصية محمية والإنترنت مستقر</string>
 </resources>

@@ -20,6 +20,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".AppIsolationActivity"
+            android:exported="false"
+            android:label="عزل التطبيقات" />
+
         <service
             android:name=".AdBlockVpnService"
             android:permission="android.permission.BIND_VPN_SERVICE"
