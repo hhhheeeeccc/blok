@@ -2,7 +2,6 @@ package com.jules.adblock;
 
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -68,16 +66,20 @@ public class AppIsolationActivity extends AppCompatActivity {
 
     private void loadApps() {
         PackageManager pm = getPackageManager();
-        List<PackageInfo> packages = pm.getInstalledPackages(PackageManager.GET_META_DATA);
+        List<ApplicationInfo> apps = pm.getInstalledApplications(PackageManager.GET_META_DATA);
 
-        for (PackageInfo packageInfo : packages) {
-            if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue; // Skip system apps
-            if (packageInfo.packageName.equals(getPackageName())) continue; // Skip self
+        for (ApplicationInfo appInfo : apps) {
+            // Skip self
+            if (appInfo.packageName.equals(getPackageName())) continue;
+            
+            // Show only non-system apps or system apps that have a launch intent
+            boolean isSystemApp = (appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+            if (isSystemApp && pm.getLaunchIntentForPackage(appInfo.packageName) == null) continue;
 
             AppInfo info = new AppInfo();
-            info.name = packageInfo.applicationInfo.loadLabel(pm).toString();
-            info.packageName = packageInfo.packageName;
-            info.icon = packageInfo.applicationInfo.loadIcon(pm);
+            info.name = appInfo.loadLabel(pm).toString();
+            info.packageName = appInfo.packageName;
+            info.icon = appInfo.loadIcon(pm);
             info.isIsolated = isolatedApps.contains(info.packageName);
             allApps.add(info);
         }
