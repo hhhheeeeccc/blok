@@ -1,4 +1,4 @@
-# Android AdBlocker App
+# Android AdBlocker App (blok)
 
 A simple yet effective Android application to block ads system-wide by intercepting DNS traffic using the Android `VpnService` API and routing it to AdGuard DNS.
 
@@ -20,7 +20,7 @@ You can download the latest pre-built APK directly from here:
 
 ---
 
-# مانع الإعلانات (AdBlocker)
+# مانع الإعلانات (AdBlocker) - blok
 
 تطبيق أندرويد متطور وبسيط مصمم لمنع الإعلانات المزعجة التي تظهر فجأة في التطبيقات والمواقع.
 
@@ -31,4 +31,21 @@ You can download the latest pre-built APK directly from here:
 يمكنك تحميل ملف الـ APK الجاهز للتثبيت مباشرة من هنا:
 **[تحميل تطبيق blok (نسخة APK)](https://files.manuscdn.com/user_upload_by_module/session_file/310519663740656074/lyrpKtVEpnKCkUPp.apk)**
 
-![App Design](https://lh3.googleusercontent.com/aida/AP1WRLtYgnuk-Mn3anBhCjmHHzTojMUykz6z8cra6oAQkztC_7zkezJNaL0nfWI_GBOl4kMK7Uy3oHn_z2nQThYwOFQ2o1172LZ5SncZrWLUuWUFQ8Lu-kbKWkhnNG1nq4iz5lp6QYJaEocUXokXu0hY6-n9yz5r6gOWXBYaJqft1_gXaZmjvxXyHNESuolhfsWj4n_3YOm_uTTlC-f5RrZLNdtP3DDLMjC3XBQ1RrVL4lHPA_jzA4crxvSBGBE)
+---
+
+## 📱 واجهة التطبيق (App Interface)
+![App Interface](https://files.manuscdn.com/user_upload_by_module/session_file/310519663740743663/BtJbwLpHncusAjHr.png)
+
+---
+
+## 🛠️ كيفية التثبيت من GitHub على الجوال
+
+1. **تحميل ملف APK**: اضغط على رابط "تحميل تطبيق blok" أعلاه من متصفح جوالك.
+2. **السماح بالتثبيت**: إذا ظهر لك تحذير "الملف قد يكون ضاراً"، اختر **"التنزيل على أي حال"**.
+3. **فتح الملف**: بعد اكتمال التحميل، افتح الملف. قد يطلب منك النظام السماح بتثبيت تطبيقات من **"مصادر غير معروفة"** في الإعدادات؛ قم بتفعيل الخيار.
+4. **التثبيت**: اضغط على **"تثبيت"** وانتظر حتى ينتهي.
+5. **التشغيل**: افتح تطبيق **blok** واضغط على زر **"تشغيل"** لبدء حجب الإعلانات.
+6. **تأكيد VPN**: سيطلب التطبيق إذن إنشاء اتصال VPN (هذا ضروري لتصفية الإعلانات)، اضغط **"موافق"**.
+
+---
+*تم التحديث بواسطة Manus Agent*
