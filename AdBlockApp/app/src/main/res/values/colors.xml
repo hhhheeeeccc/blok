@@ -1,10 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="primary">#ADC6FF</color>
+    <color name="onPrimary">#002E6A</color>
+    <color name="primaryContainer">#4D8EFF</color>
+    <color name="onPrimaryContainer">#00285D</color>
+
+    <color name="secondary">#4EDEA3</color>
+    <color name="onSecondary">#003824</color>
+    <color name="secondaryContainer">#00A572</color>
+    <color name="onSecondaryContainer">#00311F</color>
+
+    <color name="tertiary">#FFB3AD</color>
+    <color name="onTertiary">#68000A</color>
+    <color name="tertiaryContainer">#FF5451</color>
+    <color name="onTertiaryContainer">#5C0008</color>
+
+    <color name="error">#FFB4AB</color>
+    <color name="onError">#690005</color>
+
+    <color name="background">#0B1326</color>
+    <color name="onBackground">#DAE2FD</color>
+
+    <color name="surface">#0B1326</color>
+    <color name="onSurface">#DAE2FD</color>
+    <color name="surfaceVariant">#2D3449</color>
+    <color name="onSurfaceVariant">#C2C6D6</color>
+
+    <color name="outline">#8C909F</color>
+
+    <color name="active_green">#10B981</color>
+    <color name="inactive_red">#EF4444</color>
+    <color name="glass_white">#1AFFFFFF</color>
 </resources>
