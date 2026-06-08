@@ -15,4 +15,6 @@
     <string name="stats_trackers">تعقبات متوقفة</string>
     <string name="stats_data">بيانات موفرة</string>
     <string name="data_unit">ميجابايت</string>
+    <string name="wifi_label">Wi-Fi</string>
+    <string name="mobile_data_label">بيانات الهاتف</string>
 </resources>

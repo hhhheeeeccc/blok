@@ -3,13 +3,19 @@ package com.jules.adblock;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.net.VpnService;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import java.io.IOException;
@@ -20,11 +26,42 @@ public class AdBlockVpnService extends VpnService {
     private static final String TAG = "AdBlockVpnService";
     private static final String CHANNEL_ID = "AdBlockVpnChannel";
     private ParcelFileDescriptor vpnInterface = null;
+    private ConnectivityManager connectivityManager;
+    private ConnectivityManager.NetworkCallback networkCallback;
 
     @Override
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
+        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        setupNetworkCallback();
+    }
+
+    private void setupNetworkCallback() {
+        NetworkRequest request = new NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .build();
+
+        networkCallback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                Log.i(TAG, "Network available, re-evaluating VPN");
+                startVpn();
+            }
+
+            @Override
+            public void onLost(@NonNull Network network) {
+                Log.i(TAG, "Network lost");
+            }
+
+            @Override
+            public void onCapabilitiesChanged(@NonNull Network network, @NonNull NetworkCapabilities networkCapabilities) {
+                Log.i(TAG, "Network capabilities changed, re-evaluating VPN");
+                startVpn();
+            }
+        };
+
+        connectivityManager.registerNetworkCallback(request, networkCallback);
     }
 
     @Override
@@ -47,6 +84,20 @@ public class AdBlockVpnService extends VpnService {
         return START_STICKY;
     }
 
+    private boolean isWifiConnected() {
+        Network activeNetwork = connectivityManager.getActiveNetwork();
+        if (activeNetwork == null) return false;
+        NetworkCapabilities caps = connectivityManager.getNetworkCapabilities(activeNetwork);
+        return caps != null && caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
+    }
+
+    private boolean isMobileDataConnected() {
+        Network activeNetwork = connectivityManager.getActiveNetwork();
+        if (activeNetwork == null) return false;
+        NetworkCapabilities caps = connectivityManager.getNetworkCapabilities(activeNetwork);
+        return caps != null && caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
+    }
+
     private void startVpn() {
         if (vpnInterface != null) {
             stopVpnInternal();
@@ -66,9 +117,19 @@ public class AdBlockVpnService extends VpnService {
                .addDnsServer("8.8.4.4");
 
         SharedPreferences prefs = getSharedPreferences("adblock_prefs", MODE_PRIVATE);
-        Set<String> isolatedApps = prefs.getStringSet("isolated_apps", new HashSet<>());
 
-        if (isolatedApps != null && !isolatedApps.isEmpty()) {
+        Set<String> isolatedApps = new HashSet<>();
+        if (isWifiConnected()) {
+            Log.i(TAG, "Current Network: WiFi");
+            isolatedApps.addAll(prefs.getStringSet("isolated_apps_wifi", new HashSet<>()));
+        } else if (isMobileDataConnected()) {
+            Log.i(TAG, "Current Network: Mobile Data");
+            isolatedApps.addAll(prefs.getStringSet("isolated_apps_mobile", new HashSet<>()));
+        } else {
+            Log.i(TAG, "No internet connection detected for isolation");
+        }
+
+        if (!isolatedApps.isEmpty()) {
             Log.i(TAG, "Isolating apps: " + isolatedApps.size());
             for (String pkg : isolatedApps) {
                 try {
@@ -93,7 +154,7 @@ public class AdBlockVpnService extends VpnService {
             Log.i(TAG, "VPN Interface established");
         } catch (Exception e) {
             Log.e(TAG, "Failed to establish VPN interface", e);
-            stopSelf();
+            // Don't stopSelf() here if we want to wait for network availability
         }
     }
 
@@ -130,6 +191,9 @@ public class AdBlockVpnService extends VpnService {
 
     @Override
     public void onDestroy() {
+        if (connectivityManager != null && networkCallback != null) {
+            connectivityManager.unregisterNetworkCallback(networkCallback);
+        }
         stopVpn();
         super.onDestroy();
     }
