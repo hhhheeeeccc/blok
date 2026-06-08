@@ -39,6 +39,7 @@ public class AdBlockVpnService extends VpnService {
                 .setContentText(getString(R.string.vpn_notif_text))
                 .setSmallIcon(android.R.drawable.ic_lock_idle_lock) // Temporary icon
                 .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
                 .build();
 
         startForeground(1, notification);
@@ -48,18 +49,21 @@ public class AdBlockVpnService extends VpnService {
 
     private void startVpn() {
         if (vpnInterface != null) {
-            stopVpn();
+            stopVpnInternal();
         }
 
         Builder builder = new Builder();
         builder.setSession("AdBlocker")
                .addAddress("10.0.0.2", 32)
-               // AdGuard DNS for AdBlocking
+               // Primary: AdGuard DNS for AdBlocking
                .addDnsServer("94.140.14.14")
                .addDnsServer("94.140.15.15")
-               // Cloudflare and Google DNS for Unblocking (Lightweight VPN)
+               // Fallback: Cloudflare DNS
                .addDnsServer("1.1.1.1")
-               .addDnsServer("8.8.8.8");
+               .addDnsServer("1.0.0.1")
+               // Secondary Fallback: Google DNS
+               .addDnsServer("8.8.8.8")
+               .addDnsServer("8.8.4.4");
 
         SharedPreferences prefs = getSharedPreferences("adblock_prefs", MODE_PRIVATE);
         Set<String> isolatedApps = prefs.getStringSet("isolated_apps", new HashSet<>());
@@ -77,7 +81,6 @@ public class AdBlockVpnService extends VpnService {
             builder.addRoute("0.0.0.0", 0);
         } else {
             // DNS-only mode: Only capture traffic for our own app to keep VPN active
-            // This allows system-wide DNS to work without intercepting other app traffic
             try {
                 builder.addAllowedApplication(getPackageName());
             } catch (Exception e) {
@@ -90,10 +93,17 @@ public class AdBlockVpnService extends VpnService {
             Log.i(TAG, "VPN Interface established");
         } catch (Exception e) {
             Log.e(TAG, "Failed to establish VPN interface", e);
+            stopSelf();
         }
     }
 
     private void stopVpn() {
+        stopVpnInternal();
+        stopForeground(true);
+        stopSelf();
+    }
+
+    private void stopVpnInternal() {
         if (vpnInterface != null) {
             try {
                 vpnInterface.close();
@@ -102,8 +112,6 @@ public class AdBlockVpnService extends VpnService {
             }
             vpnInterface = null;
         }
-        stopForeground(true);
-        stopSelf();
     }
 
     private void createNotificationChannel() {
