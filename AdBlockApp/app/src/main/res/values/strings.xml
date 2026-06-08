@@ -2,7 +2,7 @@
     <string name="app_name">مانع الإعلانات</string>
     <string name="app_title">مانع الإعلانات الذكي</string>
     <string name="app_subtitle">حماية من الإعلانات وفك حجب المواقع</string>
-    <string name="status_active">الحماية وفك الحجب نشط</string>
+    <string name="status_active">الحماية نشطة</string>
     <string name="status_inactive">الخدمة متوقفة</string>
     <string name="btn_isolation">إدارة عزل التطبيقات</string>
     <string name="isolation_title">عزل التطبيقات</string>
@@ -10,4 +10,11 @@
     <string name="search_hint">بحث عن تطبيق...</string>
     <string name="vpn_notif_title">مانع الإعلانات يعمل</string>
     <string name="vpn_notif_text">الخصوصية محمية والإنترنت مستقر</string>
+
+    <string name="hero_title">بنيت للمهتمين</string>
+    <string name="hero_subtitle">ابق على اطلاع بأحدث الأخبار والرؤى. اشترك في نشرتنا الإخبارية اليوم ولا تفوت التحديثات المثيرة.</string>
+    <string name="nav_sign_up">إنشاء حساب</string>
+    <string name="nav_login">تسجيل الدخول</string>
+    <string name="status_idle">اضغط لتفعيل مانع الإعلانات</string>
+    <string name="btn_manifesto">البيان</string>
 </resources>

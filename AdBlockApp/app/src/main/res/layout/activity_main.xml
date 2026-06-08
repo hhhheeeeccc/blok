@@ -1,82 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:padding="24dp">
+    android:clipChildren="false">
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_title"
-        android:textColor="@color/onBackground"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_subtitle"
-        android:textColor="@color/onSurfaceVariant"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/tv_title"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+    <!-- Background Video Container -->
     <FrameLayout
-        android:id="@+id/shield_container"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_subtitle"
-        app:layout_constraintBottom_toTopOf="@id/btn_isolation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:id="@+id/video_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <View
-            android:id="@+id/shield_glow"
+        <TextureView
+            android:id="@+id/background_video"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/shield_glow_inactive" />
-
-        <ImageButton
-            android:id="@+id/btn_shield"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_gravity="center"
-            android:background="@drawable/shield_button_inactive"
-            android:src="@drawable/ic_shield_off"
-            android:padding="40dp"
-            android:scaleType="fitCenter" />
+            android:alpha="0" />
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/tv_status"
+    <!-- Navigation Bar -->
+    <LinearLayout
+        android:id="@+id/nav_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/liquid_glass_button"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="12dp"
+        android:elevation="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="1024dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_globe"
+            app:tint="#FFFFFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Asme"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@string/nav_sign_up"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/liquid_glass_button"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="8dp"
+            android:text="@string/nav_login"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Hero Content -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/hero_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:paddingHorizontal="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/social_footer"
+        app:layout_constraintTop_toBottomOf="@+id/nav_bar"
+        app:layout_constraintVertical_bias="0.3">
+
+        <TextView
+            android:id="@+id/tv_hero_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/instrument_serif"
+            android:text="@string/hero_title"
+            android:textColor="#FFFFFF"
+            android:textSize="48sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Control Bar (Repurposed Email Input) -->
+        <LinearLayout
+            android:id="@+id/control_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/liquid_glass_input"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_hero_title"
+            app:layout_constraintWidth_max="400dp">
+
+            <TextView
+                android:id="@+id/tv_status_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:text="@string/status_idle"
+                android:textColor="#66FFFFFF"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/btn_shield"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/white_circle_button"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_arrow_right" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_hero_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:text="@string/hero_subtitle"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/control_bar" />
+
+        <TextView
+            android:id="@+id/btn_manifesto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/liquid_glass_button"
+            android:paddingHorizontal="32dp"
+            android:paddingVertical="12dp"
+            android:text="@string/btn_manifesto"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_hero_subtitle" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Social Footer -->
+    <LinearLayout
+        android:id="@+id/social_footer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/status_inactive"
-        android:textColor="@color/inactive_red"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/shield_container"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_marginBottom="48dp"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <Button
-        android:id="@+id/btn_isolation"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:text="@string/btn_isolation"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        android:textColor="@color/onPrimary"
-        android:backgroundTint="@color/primary"
-        app:cornerRadius="24dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        <ImageButton
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="@drawable/liquid_glass_button"
+            android:padding="16dp"
+            android:src="@drawable/ic_instagram" />
+
+        <ImageButton
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="@drawable/liquid_glass_button"
+            android:padding="16dp"
+            android:src="@drawable/ic_twitter" />
+
+        <ImageButton
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="@drawable/liquid_glass_button"
+            android:padding="16dp"
+            android:src="@drawable/ic_globe" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
