@@ -10,4 +10,9 @@
     <string name="search_hint">بحث عن تطبيق...</string>
     <string name="vpn_notif_title">مانع الإعلانات يعمل</string>
     <string name="vpn_notif_text">الخصوصية محمية والإنترنت مستقر</string>
+
+    <string name="stats_ads">إعلانات محجوبة</string>
+    <string name="stats_trackers">تعقبات متوقفة</string>
+    <string name="stats_data">بيانات موفرة</string>
+    <string name="data_unit">ميجابايت</string>
 </resources>
