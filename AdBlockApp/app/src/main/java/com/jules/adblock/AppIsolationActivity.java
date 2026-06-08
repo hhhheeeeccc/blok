@@ -1,5 +1,6 @@
 package com.jules.adblock;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -30,7 +31,8 @@ public class AppIsolationActivity extends AppCompatActivity {
 
     private AppAdapter adapter;
     private List<AppInfo> allApps = new ArrayList<>();
-    private Set<String> isolatedApps;
+    private Set<String> isolatedAppsWifi;
+    private Set<String> isolatedAppsMobile;
     private SharedPreferences prefs;
 
     @Override
@@ -39,7 +41,8 @@ public class AppIsolationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_app_isolation);
 
         prefs = getSharedPreferences("adblock_prefs", MODE_PRIVATE);
-        isolatedApps = new HashSet<>(prefs.getStringSet("isolated_apps", new HashSet<>()));
+        isolatedAppsWifi = new HashSet<>(prefs.getStringSet("isolated_apps_wifi", new HashSet<>()));
+        isolatedAppsMobile = new HashSet<>(prefs.getStringSet("isolated_apps_mobile", new HashSet<>()));
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view_apps);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -80,7 +83,8 @@ public class AppIsolationActivity extends AppCompatActivity {
             info.name = appInfo.loadLabel(pm).toString();
             info.packageName = appInfo.packageName;
             info.icon = appInfo.loadIcon(pm);
-            info.isIsolated = isolatedApps.contains(info.packageName);
+            info.isWifiIsolated = isolatedAppsWifi.contains(info.packageName);
+            info.isMobileIsolated = isolatedAppsMobile.contains(info.packageName);
             allApps.add(info);
         }
 
@@ -98,11 +102,17 @@ public class AppIsolationActivity extends AppCompatActivity {
         adapter.updateList(filteredList);
     }
 
+    private void triggerVpnUpdate() {
+        Intent intent = new Intent(this, AdBlockVpnService.class);
+        startService(intent);
+    }
+
     private class AppInfo {
         String name;
         String packageName;
         Drawable icon;
-        boolean isIsolated;
+        boolean isWifiIsolated;
+        boolean isMobileIsolated;
     }
 
     private class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
@@ -130,20 +140,34 @@ public class AppIsolationActivity extends AppCompatActivity {
             holder.name.setText(app.name);
             holder.packageName.setText(app.packageName);
             holder.icon.setImageDrawable(app.icon);
-            holder.checkBox.setOnCheckedChangeListener(null);
-            holder.checkBox.setChecked(app.isIsolated);
 
-            holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                app.isIsolated = isChecked;
+            holder.wifiCheckBox.setOnCheckedChangeListener(null);
+            holder.wifiCheckBox.setChecked(app.isWifiIsolated);
+
+            holder.mobileCheckBox.setOnCheckedChangeListener(null);
+            holder.mobileCheckBox.setChecked(app.isMobileIsolated);
+
+            holder.wifiCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                app.isWifiIsolated = isChecked;
                 if (isChecked) {
-                    isolatedApps.add(app.packageName);
+                    isolatedAppsWifi.add(app.packageName);
                 } else {
-                    isolatedApps.remove(app.packageName);
+                    isolatedAppsWifi.remove(app.packageName);
                 }
-                prefs.edit().putStringSet("isolated_apps", isolatedApps).apply();
+                prefs.edit().putStringSet("isolated_apps_wifi", isolatedAppsWifi).apply();
+                triggerVpnUpdate();
             });
 
-            holder.itemView.setOnClickListener(v -> holder.checkBox.performClick());
+            holder.mobileCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                app.isMobileIsolated = isChecked;
+                if (isChecked) {
+                    isolatedAppsMobile.add(app.packageName);
+                } else {
+                    isolatedAppsMobile.remove(app.packageName);
+                }
+                prefs.edit().putStringSet("isolated_apps_mobile", isolatedAppsMobile).apply();
+                triggerVpnUpdate();
+            });
         }
 
         @Override
@@ -154,14 +178,15 @@ public class AppIsolationActivity extends AppCompatActivity {
         class ViewHolder extends RecyclerView.ViewHolder {
             ImageView icon;
             TextView name, packageName;
-            CheckBox checkBox;
+            CheckBox wifiCheckBox, mobileCheckBox;
 
             ViewHolder(View itemView) {
                 super(itemView);
                 icon = itemView.findViewById(R.id.app_icon);
                 name = itemView.findViewById(R.id.app_name);
                 packageName = itemView.findViewById(R.id.app_package);
-                checkBox = itemView.findViewById(R.id.app_checkbox);
+                wifiCheckBox = itemView.findViewById(R.id.wifi_checkbox);
+                mobileCheckBox = itemView.findViewById(R.id.mobile_checkbox);
             }
         }
     }
